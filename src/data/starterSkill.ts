@@ -1,4 +1,7 @@
-export const STARTER_SKILL = `---
+import type { SkillContent } from '../types';
+
+export const STARTER_SKILL: SkillContent = {
+  'SKILL.md': `---
 name: secret-guard
 description: Detects and blocks sensitive data before it reaches the model.
 ---
@@ -24,4 +27,5 @@ When the user sends a message that contains...
 ## Allow
 
 - ...
-`;
+`,
+};

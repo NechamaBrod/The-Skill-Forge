@@ -1,40 +1,41 @@
-import type { RunResult, Scenario, Verdict } from '../types';
+import type { ResultQuadrant, RunResult, Scenario } from '../types';
 
 interface Props {
   scenario: Scenario | null;
   result: RunResult | null;
   onRun: () => void;
   isRunning: boolean;
+  mode: 'simulation' | 'live';
 }
 
-const VERDICT_META: Record<Verdict, { label: string; icon: string; color: string; bg: string }> = {
+const VERDICT_META: Record<ResultQuadrant, { label: string; icon: string; color: string; bg: string }> = {
   caught: {
     label: 'תפסת! (Caught)',
     icon: '✓',
     color: 'text-success',
     bg: 'bg-success/10 border-success/40',
   },
-  leaked: {
-    label: 'דליפה (Leaked)',
+  missed: {
+    label: 'דליפה (Missed)',
     icon: '✕',
     color: 'text-danger',
     bg: 'bg-danger/10 border-danger/40',
   },
-  'over-blocked': {
-    label: 'חסמת מדי (Over-blocked)',
+  false_positive: {
+    label: 'חסמת מדי (False Positive)',
     icon: '!',
     color: 'text-warning',
     bg: 'bg-warning/10 border-warning/40',
   },
-  'correct-ignore': {
-    label: 'התעלמת בצדק (Correctly ignored)',
+  correct_ignore: {
+    label: 'התעלמת בצדק (Correct Ignore)',
     icon: '○',
     color: 'text-text-muted',
     bg: 'bg-bg-panel border-border',
   },
 };
 
-export function ResponsePane({ scenario, result, onRun, isRunning }: Props) {
+export function ResponsePane({ scenario, result, onRun, isRunning, mode }: Props) {
   if (!scenario) {
     return (
       <div className="flex flex-col h-full bg-bg">
@@ -53,7 +54,7 @@ export function ResponsePane({ scenario, result, onRun, isRunning }: Props) {
     );
   }
 
-  const meta = result ? VERDICT_META[result.verdict] : null;
+  const meta = result ? VERDICT_META[result.result] : null;
 
   return (
     <div className="flex flex-col h-full bg-bg">
@@ -61,6 +62,7 @@ export function ResponsePane({ scenario, result, onRun, isRunning }: Props) {
         <div className="flex items-center gap-2" dir="rtl">
           <div className="w-2 h-2 rounded-full bg-text-dim" />
           <span className="text-sm font-medium">תגובת המודל</span>
+          <span className="text-[10px] text-text-dim font-mono code-ltr">{mode}</span>
         </div>
         <button
           onClick={onRun}
@@ -88,10 +90,23 @@ export function ResponsePane({ scenario, result, onRun, isRunning }: Props) {
                 <span className={`text-lg font-bold ${meta.color}`}>{meta.icon}</span>
                 <span className={`text-sm font-semibold ${meta.color}`}>{meta.label}</span>
               </div>
-              <div className="text-[10px] text-text-dim mb-1 uppercase tracking-wider">מה קרה</div>
+              <div className="text-[10px] text-text-dim mb-1 uppercase tracking-wider">תגובת המודל</div>
               <pre className="text-xs code-ltr text-text whitespace-pre-wrap mb-3">{result.modelResponse}</pre>
-              <div className="text-[10px] text-text-dim mb-1 uppercase tracking-wider">למה?</div>
-              <p className="text-sm text-text">{result.rationale}</p>
+              {result.matchedTriggers.length > 0 && (
+                <>
+                  <div className="text-[10px] text-text-dim mb-1 uppercase tracking-wider">Triggers שזוהו</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {result.matchedTriggers.map((t) => (
+                      <span
+                        key={t}
+                        className="text-[10px] font-mono code-ltr px-1.5 py-0.5 rounded bg-bg-panel border border-border-strong text-text-muted"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </section>
         )}

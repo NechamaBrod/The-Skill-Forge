@@ -1,7 +1,7 @@
-import type { Metrics } from '../lib/simulator';
+import { QUADRANT_LABEL, type Score } from '../lib/simulator';
 
 interface Props {
-  metrics: Metrics;
+  score: Score;
   tips: string[];
   onClose: () => void;
   onDownload: () => void;
@@ -23,8 +23,9 @@ function Bar({ label, value, color }: { label: string; value: number; color: str
   );
 }
 
-export function SummaryModal({ metrics, tips, onClose, onDownload, onReset }: Props) {
-  const { precision, recall, truePositives, falsePositives, falseNegatives, trueNegatives } = metrics;
+export function SummaryModal({ score, tips, onClose, onDownload, onReset }: Props) {
+  const { precision, recall, quadrant, caught, missed, falsePositive, correctIgnore } = score;
+  const ql = QUADRANT_LABEL[quadrant];
 
   return (
     <div
@@ -36,7 +37,7 @@ export function SummaryModal({ metrics, tips, onClose, onDownload, onReset }: Pr
         onClick={(e) => e.stopPropagation()}
         dir="rtl"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-1">
           <h2 className="text-xl font-bold">סיכום הריצה</h2>
           <button
             onClick={onClose}
@@ -46,6 +47,7 @@ export function SummaryModal({ metrics, tips, onClose, onDownload, onReset }: Pr
             ×
           </button>
         </div>
+        <p className={`text-sm font-semibold mb-6 ${ql.color}`}>{ql.he}</p>
 
         <div className="grid grid-cols-2 gap-6 mb-6">
           <Bar label="Precision — דיוק החסימות" value={precision} color="bg-accent" />
@@ -54,20 +56,20 @@ export function SummaryModal({ metrics, tips, onClose, onDownload, onReset }: Pr
 
         <div className="grid grid-cols-2 gap-2 mb-6">
           <div className="rounded-lg border border-success/30 bg-success/5 p-3">
-            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">תפיסות נכונות</div>
-            <div className="text-2xl font-bold text-success font-mono code-ltr">{truePositives}</div>
+            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Caught</div>
+            <div className="text-2xl font-bold text-success font-mono code-ltr">{caught}</div>
           </div>
           <div className="rounded-lg border border-danger/30 bg-danger/5 p-3">
-            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">דליפות</div>
-            <div className="text-2xl font-bold text-danger font-mono code-ltr">{falseNegatives}</div>
+            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Missed</div>
+            <div className="text-2xl font-bold text-danger font-mono code-ltr">{missed}</div>
           </div>
           <div className="rounded-lg border border-warning/30 bg-warning/5 p-3">
-            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">חסימות יתר</div>
-            <div className="text-2xl font-bold text-warning font-mono code-ltr">{falsePositives}</div>
+            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">False Positive</div>
+            <div className="text-2xl font-bold text-warning font-mono code-ltr">{falsePositive}</div>
           </div>
           <div className="rounded-lg border border-border bg-bg-panel p-3">
-            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">התעלמויות נכונות</div>
-            <div className="text-2xl font-bold text-text-muted font-mono code-ltr">{trueNegatives}</div>
+            <div className="text-[10px] text-text-dim uppercase tracking-wider mb-1">Correct Ignore</div>
+            <div className="text-2xl font-bold text-text-muted font-mono code-ltr">{correctIgnore}</div>
           </div>
         </div>
 

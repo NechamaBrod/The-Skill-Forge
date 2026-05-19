@@ -13,9 +13,9 @@ interface Props {
 const STATUS_DOT: Record<string, string> = {
   idle: 'bg-border-strong',
   caught: 'bg-success',
-  leaked: 'bg-danger',
-  'over-blocked': 'bg-warning',
-  'correct-ignore': 'bg-neutral',
+  missed: 'bg-danger',
+  false_positive: 'bg-warning',
+  correct_ignore: 'bg-neutral',
 };
 
 const DIFF_LABEL: Record<string, { text: string; color: string }> = {
@@ -68,7 +68,7 @@ export function ScenariosPane({
       <div className="flex-1 min-h-0 overflow-y-auto">
         {scenarios.map((s) => {
           const result = results.get(s.id);
-          const status = result?.verdict ?? 'idle';
+          const status = result?.result ?? 'idle';
           const isSelected = selectedId === s.id;
           const diff = DIFF_LABEL[s.difficulty];
           return (
