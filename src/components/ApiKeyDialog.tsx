@@ -22,8 +22,40 @@ export function ApiKeyDialog({ initial = '', onSave, onCancel }: Props) {
       >
         <h2 className="text-lg font-bold mb-1">Live Mode — Anthropic API Key</h2>
         <p className="text-xs text-text-muted mb-4">
-          המפתח נשמר ב-localStorage של הדפדפן בלבד ונשלח רק ל-<span className="code-ltr font-mono">api.anthropic.com</span>.
+          כדי לבדוק את ה-Skill מול Claude אמיתי, צריך מפתח API משלך.
         </p>
+
+        <div className="rounded-lg border border-success/30 bg-success/5 p-3 mb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-success" />
+            <span className="text-xs font-semibold text-success">המפתח שלך — אצלך בלבד</span>
+          </div>
+          <ul className="space-y-1.5 text-[11px] text-text-muted leading-relaxed">
+            <li className="flex gap-2">
+              <span className="text-success shrink-0">✓</span>
+              <span>נשמר ב-<span className="code-ltr font-mono">sessionStorage</span> של הטאב הזה בדפדפן שלך, במכשיר שלך.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-success shrink-0">✓</span>
+              <span>נמחק אוטומטית כשסוגרים את הטאב.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-success shrink-0">✓</span>
+              <span>נשלח רק ל-<span className="code-ltr font-mono">api.anthropic.com</span>, ישירות מהדפדפן שלך.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-danger shrink-0">✗</span>
+              <span>לא נשלח לקורס, לא לשרת שלי, לא לאף צד שלישי.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-danger shrink-0">✗</span>
+              <span>אין שרת backend לכלי הזה — הוא רץ כולו בדפדפן שלך (static site).</span>
+            </li>
+          </ul>
+          <p className="text-[11px] text-text-dim mt-2 pt-2 border-t border-success/20">
+            אפשר לוודא: פתחי DevTools → Network ותראי שכל קריאה הולכת רק ל-<span className="code-ltr font-mono">api.anthropic.com</span>.
+          </p>
+        </div>
         <input
           type="password"
           autoFocus

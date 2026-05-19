@@ -47,7 +47,7 @@ export default function App() {
   const [mode, setMode] = useState<RunMode>(
     () => (localStorage.getItem(MODE_KEY) === 'live' ? 'live' : 'simulation'),
   );
-  const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem(API_KEY) ?? '');
+  const [apiKey, setApiKey] = useState<string>(() => sessionStorage.getItem(API_KEY) ?? '');
   const [showKeyDialog, setShowKeyDialog] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,7 +137,7 @@ export default function App() {
     setShowSummary(false);
     setApiKey('');
     localStorage.removeItem(SKILL_KEY);
-    localStorage.removeItem(API_KEY);
+    sessionStorage.removeItem(API_KEY);
   }
 
   function handleFileChange(name: string, value: string) {
@@ -173,7 +173,7 @@ export default function App() {
 
   function handleSaveKey(key: string) {
     setApiKey(key);
-    localStorage.setItem(API_KEY, key);
+    sessionStorage.setItem(API_KEY, key);
     setMode('live');
     setShowKeyDialog(false);
     setError(null);

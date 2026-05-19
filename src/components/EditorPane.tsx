@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Editor from '@monaco-editor/react';
+import { CodeEditor } from './CodeEditor';
 import type { SkillContent } from '../types';
 
 interface Props {
@@ -118,23 +118,9 @@ export function EditorPane({
       </div>
 
       <div className="flex-1 min-h-0">
-        <Editor
-          height="100%"
-          defaultLanguage="markdown"
-          path={activeFile}
+        <CodeEditor
           value={skill[activeFile] ?? ''}
-          onChange={(v) => onFileChange(activeFile, v ?? '')}
-          theme="vs-dark"
-          options={{
-            fontFamily: 'JetBrains Mono, ui-monospace, monospace',
-            fontSize: 13,
-            minimap: { enabled: false },
-            wordWrap: 'on',
-            lineNumbers: 'on',
-            scrollBeyondLastLine: false,
-            padding: { top: 12 },
-            renderLineHighlight: 'none',
-          }}
+          onChange={(v) => onFileChange(activeFile, v)}
         />
       </div>
     </div>
